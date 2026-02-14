@@ -91,25 +91,6 @@ fn state_changed_callback(
     }
 }
 
-unsafe fn get_timestamp(buffer: *mut spa_buffer) -> i64 {
-    let n_metas = (*buffer).n_metas;
-    if n_metas > 0 {
-        let mut meta_ptr = (*buffer).metas;
-        let metas_end = (*buffer).metas.wrapping_add(n_metas as usize);
-        while meta_ptr != metas_end {
-            if (*meta_ptr).type_ == SPA_META_Header {
-                let meta_header: &mut spa_meta_header =
-                    &mut *((*meta_ptr).data as *mut spa_meta_header);
-                return meta_header.pts;
-            }
-            meta_ptr = meta_ptr.wrapping_add(1);
-        }
-        0
-    } else {
-        0
-    }
-}
-
 fn process_callback(stream: &StreamRef, user_data: &mut ListenerUserData) {
     let buffer = unsafe { stream.dequeue_raw_buffer() };
     if !buffer.is_null() {
@@ -118,7 +99,6 @@ fn process_callback(stream: &StreamRef, user_data: &mut ListenerUserData) {
             if buffer.is_null() {
                 break 'outside;
             }
-            let timestamp = unsafe { get_timestamp(buffer) };
             let system_time = SystemTime::now();
 
             let n_datas = unsafe { (*buffer).n_datas };
