@@ -441,7 +441,7 @@ fn spawn_audio_stream(
                 false,
                 data,
                 sample_count,
-                config.sample_rate().0,
+                config.sample_rate(),
                 timestamp,
             );
 
