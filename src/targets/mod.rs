@@ -12,6 +12,8 @@ mod linux;
 
 #[cfg(target_os = "windows")]
 unsafe impl Send for Window {}
+#[cfg(target_os = "windows")]
+unsafe impl Sync for Window {}
 
 #[derive(Debug, Clone)]
 pub struct Window {
@@ -27,6 +29,8 @@ pub struct Window {
 
 #[cfg(target_os = "windows")]
 unsafe impl Send for Display {}
+#[cfg(target_os = "windows")]
+unsafe impl Sync for Display {}
 
 #[derive(Debug, Clone)]
 pub struct Display {
